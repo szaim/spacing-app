@@ -1,0 +1,24 @@
+.container {
+	width: 80%;
+}
+
+.test, .questions {
+  width:100%;
+  display:inline-block;
+  overflow: auto;
+  white-space: nowrap;
+  margin:0px auto;
+  border:1px red solid;
+}
+
+.questions {
+	margin-top: 35%;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
