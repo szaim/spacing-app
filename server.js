@@ -16,11 +16,9 @@ app.get('/app', function(req, res) {
 							res.send("Error has occured")
 							}
 						else {
-							console.log('It me', questions);
 							res.json(questions);
 						}
 					});
-console.log("hello");
 });
 
 
