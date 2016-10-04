@@ -1,7 +1,11 @@
 var mongoose = require('mongoose');
 
 var LoginSchema = new mongoose.Schema({
-  googleID: { type: String, index: true }
+  googleID: { type: String, index: true },
+  accessToken: {
+  	type: String,
+  	required: true
+  }
 });
 
 

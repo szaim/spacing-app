@@ -1,24 +1,25 @@
 var mongoose = require('mongoose');
-var Login = require('./login');
+// var Login = require('./login');
 var Question = require('./question');
 
 var UserSchema = new mongoose.Schema({
-  user: {
-  	type: mongoose.Schema.Types.ObjectId,
-  	ref: "User"
-  },
-  data: [
-  	{
+
+  googleID: { type: String, index: true },
+  accessToken: {
+        type: String,
+        required: true
+    },
+
+  	questions: {
 	  	type: mongoose.Schema.Types.ObjectId,
 	  	ref: "Question"
   	},
-  	{
-  		score: {
+  	score: {
   			type: Number,
   			default: 0
-  		}
   	}
-  ]
+  	
+
 });
 
 
