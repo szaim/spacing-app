@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var Question = require('./models/questionModel');
+var Question = require('./database/models/question');
 
 var db = 'mongodb://localhost:27017/testing';
 
