@@ -4,11 +4,13 @@ var mongoose = require('mongoose');
 var Question = require('./database/models/question');
 
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
+    var BearerStrategy = require('passport-http-bearer').Strategy;
+
 var passport = require("passport");
 var bodyParser = require("body-parser");
 
 var User = require('./database/models/user');
-// var Login = require('./database/models/login');
+var Login = require('./database/models/question');
 
 var config = require('./config');
 
@@ -21,12 +23,12 @@ app.use('/', express.static('build'));
 app.use(bodyParser.json());
 
 app.get('/app', function(req, res) {
-    Question.find({})
-        .exec(function(err, questions) {
+    User.find({})
+        .exec(function(err, users) {
             if (err) {
                 res.send("Error has occured")
             } else {
-                res.json(questions);
+                res.json(users);
             }
         });
 });
@@ -42,18 +44,8 @@ passport.use(new GoogleStrategy({
         callbackURL: config.googleAuth.callbackURL,
 
     },
-    function(token, refreshToken, profile, done) {
-        // console.log('yay!', token, refreshToken, profile)
-
-        // User.findOrCreate({ googleID: profile.id }, function (err, user) {
-        //   			return done(err, user);
-        //   		});
-        // make the code asynchronous
-        // User.findOne won't fire until we have all our data back from Google
-        // process.nextTick(function() {
-
-        //     // try to find the user based on their google id
-        console.log(profile.id)
+    function(accessToken, refreshToken, profile, done) {
+ 
         User.find({
             'googleID': profile.id
         }, function(err, users) {
@@ -62,7 +54,8 @@ passport.use(new GoogleStrategy({
 
                 User.create({
                     googleID: profile.id,
-                    accessToken: token,
+                    accessToken: accessToken,
+                    // questions: questArr,
                     score: 0
                 }, function(err, users) {
                     console.log('asdfasfasf', err, users)
@@ -81,7 +74,28 @@ passport.use(new GoogleStrategy({
     }));
 
 
-
+passport.use(new BearerStrategy(
+  // function(token, done) {
+  //     if (token == 13233) {
+  //           var user = {user: 'bob'}
+  //         return done(null, user, {scope: 'read'});
+  //     }
+  //     return done(null, false);
+  // }
+  function(token, done) {
+  User.find({ accessToken: token },
+    function(err, users) {
+      if(err) {
+          return done(err)
+      }
+      if(!users) {
+          return done(null, false)
+      }
+      return done(null, users, { scope: ['read'] })
+    }
+  );
+}
+));
 
 
 app.get('/login',
@@ -112,13 +126,19 @@ app.get('/auth/google/callback',
         session: false
     }),
     function(req, res) {
-        console.log('success')
+        console.log('success');
+        res.cookie("accessToken", req.user.accessToken, {expires: 0});
+        // httpOnly: true
             // Successful authentication, redirect home.
         res.redirect('/');
     }
 );
 
 
+app.get('/profile', passport.authenticate('bearer', {session: false}), 
+    function(req, res) {
+        return res.send(req.user);
+});
 
 
 app.listen(8080, function() {
