@@ -45,7 +45,7 @@ passport.use(new GoogleStrategy({
 
     },
     function(accessToken, refreshToken, profile, done) {
- 
+        console.log('PROFILE', profile);
         User.find({
             'googleID': profile.id
         }, function(err, users) {
@@ -56,7 +56,8 @@ passport.use(new GoogleStrategy({
                     googleID: profile.id,
                     accessToken: accessToken,
                     // questions: questArr,
-                    score: 0
+                    score: 0,
+                    fullName: profile.displayName
                 }, function(err, users) {
                     console.log('asdfasfasf', err, users)
                     return done(err, users);
@@ -98,15 +99,15 @@ passport.use(new BearerStrategy(
 ));
 
 
-app.get('/login',
-    passport.authenticate('google', {
-        scope: ['profile']
-    }),
-    function(req, res) {
-        // res.send(req.user);
-        console.log("it works");
+// app.get('/login',
+//     passport.authenticate('google', {
+//         scope: ['profile']
+//     }),
+//     function(req, res) {
+//         // res.send(req.user);
+//         console.log("it works");
 
-    });
+//     });
 
 
 // route for logging out

@@ -31,7 +31,10 @@ var UserSchema = new mongoose.Schema({
   	score: {
   			type: Number,
   			default: 0
-  	}
+  	},
+    fullName: {
+      type: String
+    }
   	
 
 });

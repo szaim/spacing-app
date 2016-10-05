@@ -1,21 +1,8 @@
 var React = require("react");
-var ReactDOM = require("react-dom");
-var Questions = require("./Questions");
+import { render } from 'react-dom';
 require("../styles.css");
-var Main = function(props) {
-
-	return (
-		<Questions />
-
-	)
-}
+var routes = require ('./components/router');
+import Main from './components/app';
 
 
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    ReactDOM.render(<Main />, document.getElementById('app'));
-});
+render(routes, document.getElementById('app'));
