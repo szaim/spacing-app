@@ -18,6 +18,14 @@ var fetchUserError = function(error) {
     };
 };
 
+var GUESS_ANSWER = 'GUESS_ANSWER';
+var guessAnswer =function(answer) {
+  return {
+    type: GUESS_ANSWER,
+    answer: answer
+  }
+}
+
 var fetchUser = function() {
    return function(dispatch) {
      var token = Cookies.get('accessToken');
@@ -55,3 +63,5 @@ exports.FETCH_USER_SUCCESS = FETCH_USER_SUCCESS;
 exports.FETCH_USER_ERROR = FETCH_USER_ERROR;
 exports.fetchUserError = fetchUserError;
 exports.fetchUserSuccess = fetchUserSuccess;
+exports.GUESS_ANSWER = GUESS_ANSWER;
+exports.guessAnswer = guessAnswer;
