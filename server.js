@@ -46,6 +46,12 @@ passport.use(new GoogleStrategy({
     },
     function(accessToken, refreshToken, profile, done) {
         console.log('PROFILE', profile);
+
+        // var user = {
+        //     googleID: profile.id,
+        //     accessToken: accessToken
+        // }
+         // return done(null, user);
         User.find({
             'googleID': profile.id
         }, function(err, users) {
@@ -59,11 +65,12 @@ passport.use(new GoogleStrategy({
                     score: 0,
                     fullName: profile.displayName
                 }, function(err, users) {
-                    console.log('asdfasfasf', err, users)
-                    return done(err, users);
+                    console.log('=======>>', err, users[0])
+                    return done(err, users[0]);
                 });
 
             } else {
+                // update user with new tokens
                 return done(err, users);
             }
 
@@ -77,7 +84,8 @@ passport.use(new GoogleStrategy({
 
 passport.use(new BearerStrategy(
   // function(token, done) {
-  //     if (token == 13233) {
+  //     console.log(token);
+  //     if (token == "ya29.CjB0A2ldOpp9zilFcam6tIkGkADUBON2blsU-ozKvrrmmuqLg-Qnz9iJoHyA2fQRW0Y") {
   //           var user = {user: 'bob'}
   //         return done(null, user, {scope: 'read'});
   //     }
@@ -127,20 +135,27 @@ app.get('/auth/google/callback',
         session: false
     }),
     function(req, res) {
-        console.log('success');
-        res.cookie("accessToken", req.user.accessToken, {expires: 0});
+        console.log('req', req);
+        console.log('req.user', req.user);
+        console.log('req.user.accessToken', req.user[0].accessToken);
+        res.cookie("accessToken", req.user[0].accessToken, {expires: 0});
         // httpOnly: true
             // Successful authentication, redirect home.
-        res.redirect('/');
+        res.redirect('/#/quiz');
     }
 );
 
-
-app.get('/profile', passport.authenticate('bearer', {session: false}), 
+app.get('/user', passport.authenticate('bearer', {session: false}), 
     function(req, res) {
         return res.send(req.user);
 });
 
+//TODO: finish implementing this function
+// app.put('/user', passport.authenticate('bearer', {session: false}), 
+//     function(req, res) {
+//       //udpate db and return true/false
+//       //return res.send({questions:'PUT QUESTIONS HERE'});
+// });
 
 app.listen(8080, function() {
     console.log('Listening at 8080!');

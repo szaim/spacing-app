@@ -1,4 +1,5 @@
 require('isomorphic-fetch');
+var Cookies = require("js-cookie");
 
 var FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS';
 var fetchUserSuccess = function(user) {
@@ -19,10 +20,12 @@ var fetchUserError = function(error) {
 
 var fetchUser = function() {
    return function(dispatch) {
+     var token = Cookies.get('accessToken');
+     console.log(token);
    		var headers = new Headers({
-   			Authorization: 'Bearer' + token
+   			Authorization: 'bearer ' + token
    		});
-       var url = 'http://localhost:8080/auth/google';
+       var url = 'http://localhost:8080/user';
        return fetch(url, {headers: headers}).then(function(response) {
            if (response.status < 200 || response.status >= 300) {
                var error = new Error(response.statusText);
@@ -50,3 +53,5 @@ var fetchUser = function() {
 exports.fetchUser = fetchUser;
 exports.FETCH_USER_SUCCESS = FETCH_USER_SUCCESS;
 exports.FETCH_USER_ERROR = FETCH_USER_ERROR;
+exports.fetchUserError = fetchUserError;
+exports.fetchUserSuccess = fetchUserSuccess;
