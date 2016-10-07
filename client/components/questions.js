@@ -17,11 +17,12 @@ var Questions = React.createClass({
 	// 	var userAnswer = this.refs.userInput.value;
 	// 	console.log(userAnswer);
 	// },
-	submitForm: function(item) {
-			this.props.dispatch(actions.guessAnswer(item));
-			this.props.dispatch(actions.fetchUser());
+	// submitForm: function(result, userId) {
+	// 		this.props.dispatch(actions.guessAnswer(result));
+	// 		// this.props.dispatch(actions.putData(result, userId));
+	// 		this.props.dispatch(actions.fetchUser());
 
-	},
+	// },
 	render: function() {
 		return (
 			<div className="container">
@@ -35,9 +36,8 @@ var Questions = React.createClass({
 				</div>
 					<div className="questions">
 						<h2 className="left"> {this.props.question} </h2>
-						<h2 className="right"><Form onTodoSubmit={this.submitForm}/></h2>
+						<h2 className="right"><Form /></h2>
 					</div>
-				<p className="right">Score: 9</p>
 			</div>
 		)
 	}
@@ -45,10 +45,28 @@ var Questions = React.createClass({
 
 var mapStateToProps = function(state, props) {
 	return {
-		question: state.question,
-		// score: state.main[1].score
+		id: state.userId,
+		question: state.question.question,
+		score: state.score
 	} 
 }
+// var mapDispatchToProps = function(dispatch) {
+// 	return {
+// 		guessAnswer: function(result) {
+// 			dispatch(actions.guessAnswer(result));
+
+// 		},
+// 		putData: function(result, userId) {
+// 			dispatch(actions.putData(result, userId));
+
+// 		},
+// 		fetchUser: function() {
+// 			dispatch(actions.fetchUser());
+
+// 		}
+
+// 	}
+// }
 var Container = connect(mapStateToProps)(Questions);
 
 module.exports = Container;

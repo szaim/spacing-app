@@ -151,11 +151,44 @@ app.get('/user', passport.authenticate('bearer', {session: false}),
 });
 
 //TODO: finish implementing this function
-// app.put('/user', passport.authenticate('bearer', {session: false}), 
-//     function(req, res) {
-//       //udpate db and return true/false
-//       //return res.send({questions:'PUT QUESTIONS HERE'});
-// });
+app.put('/user/:googleID', passport.authenticate('bearer', {session: false}),
+ function(req, res) {
+  // console.log('req.body', req.body, req.body.user.id)
+     //    User.findOneAndUpdate(
+     //      { googleID: req.params.googleID, questions: {$elemMatch: {id:req.body.user.id}} },
+     //      {
+     //        $set: {correct: req.body.user.correct}
+     //        // score: req.body.score
+
+     //      },
+     //    {
+     //      'new': true
+     //    },
+
+     //     function(err, user) {
+     //      if(err) {
+     //        return res.send(err)
+     //      }
+     //      return res.send(user);
+     // });
+
+     User.update({"googleID": req.params.googleID, "questions.id" : req.body.user.id}, {"$set" : {"questions.$.correct" : req.body.user.correct, "score": req.body.score}},
+      function(err, user) {
+          if(err) {
+            return res.send(err)
+          }
+          return res.send(user);
+
+      });
+     console.log("body", req.body);
+
+
+     
+    
+      //udpate db and return true/false
+      //return res.send({questions:'PUT QUESTIONS HERE'});
+  });
+
 
 app.listen(8080, function() {
     console.log('Listening at 8080!');
